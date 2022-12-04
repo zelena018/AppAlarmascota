@@ -1,0 +1,36 @@
+<resources>
+    <string name="app_name">AlarMascota</string>
+
+    //Botones
+    <string name="btn_inicioS">Iniciar sesión</string>
+    <string name="btn_registro">Registrarse</string>
+    <string name="btn_entrarIS">Entrar</string>
+    //Para inicio de sesion
+    <string name="btn_entrarR">Entrar</string>
+    //Para registro
+    <string name="btn_mapa">Mapa</string>
+    <string name="btn_micro">Microfono</string>
+    //Para SMS
+    <string name="btn_sms">Mensajes</string>
+    <string name="btn_enviar_sms">Enviar</string>
+
+
+    //Campos
+    <string name="text_hint_nom_user">Correo</string>
+    //Lo cambie a correo
+    <string name="text_hint_password">Contraseña</string>
+    <string name="text_hint_nom">Nombre</string>
+    <string name="text_hint_correo">Correo electronico</string>
+    <string name="text_hint_password_registro">Nueva contraseña</string>
+    <string name="text_hint_conf_contra">Confirmar contraseña</string>
+
+
+    //Texto
+    <string name="text_nom_mascota">Agregar mascota</string>
+    <string name="text_nom_nota">Nota</string>
+    <string name="title_activity_pantalla_gps">pantalla_gps</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="title_activity_mapa_gps">mapaGPS</string>
+</resources>
