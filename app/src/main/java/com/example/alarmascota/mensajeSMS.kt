@@ -40,7 +40,7 @@ class mensajeSMS : AppCompatActivity() {
 
         binding.btnEnviarSms.setOnClickListener{
             var sms = SmsManager.getDefault()
-            sms.sendTextMessage(binding.numero.text.toString(),"ME","@GPS", null, null)
+            sms.sendTextMessage(binding.numero.text.toString(),"ME",binding.mensaje.text.toString(), null, null)
         }
     }
 
