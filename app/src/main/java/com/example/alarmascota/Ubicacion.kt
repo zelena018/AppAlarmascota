@@ -21,6 +21,18 @@ import com.google.android.gms.maps.model.*
 import com.google.android.gms.tasks.Task
 
 class Ubicacion : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
+    companion object{
+        var staticLatitud:Double = 0.0
+        var staticLongitude:Double = 0.0
+
+        var realLatitude:Double = 0.0
+        var realLongitude:Double = 0.0
+
+        var band:Boolean = false
+        var globalBand:Boolean = false
+    }
+
+
     private lateinit var mMap: GoogleMap
     private val DEFAULT_ZOOM = 15f
     private val CLOSE_ZOOM = 20f
@@ -32,6 +44,8 @@ class Ubicacion : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerCli
     lateinit var txtCosto: TextView
     lateinit var btnUpdate: Button
     lateinit var btnReset: Button
+    lateinit var btnGuardar: Button
+    lateinit var btnLocation: Button
 
     private val FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION
     private val COURSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION
@@ -42,8 +56,7 @@ class Ubicacion : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerCli
     private lateinit var currentLocation: Location
     private var userLat:Double = 0.0
     private var userLong:Double = 0.0
-    private var realLatitude:Double = 0.0
-    private var realLongitude:Double = 0.0
+
 
     val items = arrayOf("25m","30m", "50m")
     private var meters:Double = 20.0
@@ -59,30 +72,41 @@ class Ubicacion : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerCli
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_ubicacion)
 
-        addressTxt= findViewById(R.id.txtAddress)
         autoCompleteText = findViewById(R.id.autoCompleteText)
-        txtCosto = findViewById(R.id.txtCosto)
         btnUpdate = findViewById(R.id.btn_update)
         btnReset = findViewById(R.id.btn_reset)
+        btnGuardar = findViewById(R.id.btn_guardar)
+        //btnLocation = findViewById(R.id.btn_location)
 
         adapterItems = ArrayAdapter(this, R.layout.list_options, items)
         autoCompleteText.setAdapter(adapterItems)
 
 
         btnUpdate.setOnClickListener{
-            var ubicacion:LatLng
-            ubicacion = puntero.position
-            userLat = ubicacion.latitude
-            userLong = ubicacion.longitude
 
-            markers.removeAll(markers)
+            try{
+                var ubicacion:LatLng
+                ubicacion = puntero.position
+                userLat = ubicacion.latitude
+                userLong = ubicacion.longitude
 
-            createMarker(userLat, userLong, "HOME",1)
-            updateMap()
+                markers.removeAll(markers)
 
-            moveCamera(LatLng(userLat, userLong), ACTUAL_ZOOM, "My location")
-            //drawCircle(LatLng(userLat, userLong), 400.0)
-            txtCosto.setText("")
+                createMarker(userLat, userLong, "HOME",1)
+                updateMap()
+
+                moveCamera(LatLng(userLat, userLong), ACTUAL_ZOOM, "My location")
+                //drawCircle(LatLng(userLat, userLong), 400.0)
+                //txtCosto.setText("")
+            }catch(e:Exception){
+                markers.removeAll(markers)
+
+                createMarker(userLat, userLong, "HOME",1)
+                updateMap()
+
+                moveCamera(LatLng(userLat, userLong), ACTUAL_ZOOM, "My location")
+            }
+
 
         }
 
@@ -95,9 +119,33 @@ class Ubicacion : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerCli
 
             moveCamera(LatLng(userLat, userLong), CLOSE_ZOOM, "My location")
             //drawCircle(LatLng(userLat, userLong), 400.0)
-            txtCosto.setText("")
-
+            //txtCosto.setText("")
         }
+
+        btnGuardar.setOnClickListener {
+            staticLatitud = userLat
+            staticLongitude = userLong
+            band = true;
+            globalBand = true
+            Toast.makeText(this@Ubicacion, "Se actualizo Ubicacion", Toast.LENGTH_SHORT).show()
+        }
+
+        /*
+        btnLocation.setOnClickListener {
+            userLat = staticLatitud
+            userLong = staticLongitude
+
+            markers.removeAll(markers)
+
+            createMarker(userLat, userLong, "HOME",1)
+            updateMap()
+
+            moveCamera(LatLng(userLat, userLong), ACTUAL_ZOOM, "My location")
+        }
+        */
+
+
+
         // When click the hint selection, will trigger close keyboard function
         autoCompleteText.onItemClickListener =
             AdapterView.OnItemClickListener { parent: AdapterView<*>, view: View, position: Int, id: Long ->
@@ -218,64 +266,79 @@ class Ubicacion : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerCli
         Log.d(TAG, "getDeviceLocation: getting the devices current location");
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
-        try{
-            if(mLocationPermissionsGranted){
-                var location: Task<*> = mFusedLocationProviderClient.getLastLocation()
-                location.addOnCompleteListener { task ->
-                    if(task.isSuccessful){
-                        Log.d(TAG, "getUserLocation: Found Location")
-                        currentLocation = task.getResult() as Location
-                        val arr1 = floatArrayOf(.1f)
+        if(!band)
+        {
+            try{
+                if(mLocationPermissionsGranted){
+                    var location: Task<*> = mFusedLocationProviderClient.getLastLocation()
+                    location.addOnCompleteListener { task ->
+                        if(task.isSuccessful){
+                            Log.d(TAG, "getUserLocation: Found Location")
+                            currentLocation = task.getResult() as Location
+                            val arr1 = floatArrayOf(.1f)
 
 
-                        val home = Location("")
-                        home.latitude = 25.7299374
-                        home.longitude = -100.2096866
+                            val home = Location("")
+                            home.latitude = 25.7299374
+                            home.longitude = -100.2096866
 
 
 
-                        userLat = currentLocation.latitude
-                        userLong = currentLocation.longitude
+                            userLat = currentLocation.latitude
+                            userLong = currentLocation.longitude
 
-                        if(bandera == true){
-                            realLatitude = userLat
-                            realLongitude = userLong
-                            bandera = false
+                            if(bandera == true){
+                                realLatitude = userLat
+                                realLongitude = userLong
+                                bandera = false
+                            }
+
+
+                            var distanceInMeters = currentLocation.distanceTo(home)
+                            Log.d(TAG, "Distance in meters ->  ${distanceInMeters}")
+
+                            //addLine(currentLocation,home)
+
+                            //Location.distanceBetween(userLat, userLong, 25.7299374, -100.2096866, arr1)
+                            //Log.d(TAG, "Distance -> ${arr1[0]} ")
+
+
+
+
+                            createMarker(userLat, userLong, "HOME",1)
+
+                            for (marker:MarkerOptions in markers){
+                                mMap.addMarker(marker)
+                            }
+
+                            moveCamera(LatLng(userLat, userLong), CLOSE_ZOOM, "My location")
+                            drawCircle(LatLng(userLat, userLong),25.0)
+
+
+
+                        }else{
+                            Log.d(TAG, "onComplete: current location is null")
+                            Toast.makeText(this@Ubicacion, "Unable to get current location", Toast.LENGTH_SHORT).show()
                         }
-
-
-                        var distanceInMeters = currentLocation.distanceTo(home)
-                        Log.d(TAG, "Distance in meters ->  ${distanceInMeters}")
-
-                        //addLine(currentLocation,home)
-
-                        //Location.distanceBetween(userLat, userLong, 25.7299374, -100.2096866, arr1)
-                        //Log.d(TAG, "Distance -> ${arr1[0]} ")
-
-
-
-
-                        createMarker(userLat, userLong, "HOME",1)
-
-                        for (marker:MarkerOptions in markers){
-                            mMap.addMarker(marker)
-                        }
-
-                        moveCamera(LatLng(userLat, userLong), CLOSE_ZOOM, "My location")
-                        drawCircle(LatLng(userLat, userLong),25.0)
-
-
-
-                    }else{
-                        Log.d(TAG, "onComplete: current location is null")
-                        Toast.makeText(this@Ubicacion, "Unable to get current location", Toast.LENGTH_SHORT).show()
                     }
-                }
 
+                }
+            }catch (e: SecurityException){
+                Log.d(TAG, "getUserLocation: Security Exception ${e.message}")
             }
-        }catch (e: SecurityException){
-            Log.d(TAG, "getUserLocation: Security Exception ${e.message}")
+        }else{
+            userLat = staticLatitud
+            userLong = staticLongitude
+
+            markers.removeAll(markers)
+
+            createMarker(userLat, userLong, "HOME",1)
+            updateMap()
+
+            moveCamera(LatLng(userLat, userLong), ACTUAL_ZOOM, "My location")
         }
+
+
     }
 
     fun moveCamera(lati: LatLng, zoom:Float, title:String )

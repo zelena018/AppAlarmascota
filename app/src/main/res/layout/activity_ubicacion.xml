@@ -23,33 +23,22 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:fontFamily="monospace"
-        android:text="Ubicacion:"
+        android:text="Selecciona Ubicacion:"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Ubicación:" />
 
-    <TextView
-        android:id="@+id/txtAddress"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:fontFamily="monospace"
-        android:textAlignment="center"
-        android:textColor="@android:color/holo_green_dark"
-        app:layout_constraintEnd_toEndOf="@+id/tvName"
-        app:layout_constraintHorizontal_bias="0.505"
-        app:layout_constraintStart_toStartOf="@+id/tvName"
-        app:layout_constraintTop_toBottomOf="@+id/tvName" />
 
     <com.google.android.material.textfield.TextInputLayout
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
         android:id="@+id/dropdown_menu"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtAddress">
+        app:layout_constraintTop_toBottomOf="@+id/tvName">
 
         <AutoCompleteTextView
             android:id="@+id/autoCompleteText"
@@ -61,43 +50,12 @@
             tools:layout_editor_absoluteY="102dp" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <TextView
-        android:id="@+id/calificacion"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
-        android:layout_marginTop="20dp"
-        android:fontFamily="monospace"
-        android:text="Precios en Zona: "
-        android:textSize="16sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/dropdown_menu"
-        tools:text="Costo de Zona: " />
-
-    <TextView
-        android:id="@+id/txtCosto"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="monospace"
-
-
-        android:textAlignment="center"
-
-
-
-        app:layout_constraintBottom_toBottomOf="@+id/calificacion"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.229"
-        app:layout_constraintStart_toEndOf="@+id/calificacion"
-        app:layout_constraintTop_toTopOf="@+id/calificacion"
-        app:layout_constraintVertical_bias="1.0" />
-
     <Button
         android:id="@+id/btn_update"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="28dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="72dp"
         android:backgroundTint="#4F759B"
         android:outlineProvider="background"
         android:text="Actualizar"
@@ -107,12 +65,26 @@
         app:layout_constraintEnd_toEndOf="parent" />
 
     <Button
+        android:id="@+id/btn_guardar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="144dp"
+        android:layout_marginBottom="8dp"
+        android:backgroundTint="#38E840"
+        android:outlineProvider="background"
+        android:text="GUARDAR"
+        android:textColor="#FFFFFF"
+        app:cornerRadius="50dp"
+        app:layout_constraintBottom_toTopOf="@id/map"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <Button
         android:id="@+id/btn_reset"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="27dp"
-        android:layout_marginBottom="8dp"
-        android:backgroundTint="#388E3C"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="72dp"
+        android:backgroundTint="#FF0059"
         android:outlineProvider="background"
         android:text="RESET UBICACION"
         android:textColor="#FFFFFF"
