@@ -50,16 +50,21 @@ class home_alarmascota : AppCompatActivity() {
          //   sms.sendTextMessage(binding.numero.text.toString(),"ME","@GPS", null, null)
             //receiveMsg()
 
-            var sms = SmsManager.getDefault()
-            sms.sendTextMessage("8124349752","ME","@GPS", null, null)
+            if (Ubicacion.globalBand){
+                var sms = SmsManager.getDefault()
+                sms.sendTextMessage("8124349752","ME","@GPS", null, null)
 
 
 
-            Toast.makeText(this, coordenadas, Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, coordenadas, Toast.LENGTH_SHORT).show()
 
 
-            val intent: Intent = Intent(this, mapaGPS::class.java)
-            startActivity(intent)
+                val intent: Intent = Intent(this, mapaGPS::class.java)
+                startActivity(intent)
+            }else{
+                Toast.makeText(this, "PRIMERO DEBE GUARDAR UNA UBICACION", Toast.LENGTH_LONG).show()
+            }
+
         }
 
         //Para ir de la pantalla HOME al envio de SMS
