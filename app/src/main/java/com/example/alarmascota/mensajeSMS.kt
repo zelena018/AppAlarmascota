@@ -54,11 +54,16 @@ class mensajeSMS : AppCompatActivity() {
             receiveMsg()
     }
 
-    private fun receiveMsg() {
-        var br = object : BroadcastReceiver(){
-            override fun onReceive(p0: Context?, p1: Intent?) {
-                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                    for(sms in Telephony.Sms.Intents.getMessagesFromIntent(p1)){
+    private fun receiveMsg()
+    {
+        var br = object : BroadcastReceiver()
+        {
+            override fun onReceive(p0: Context?, p1: Intent?)
+            {
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
+                {
+                    for(sms in Telephony.Sms.Intents.getMessagesFromIntent(p1))
+                    {
                         binding.numero.setText(sms.originatingAddress)
                         binding.mensaje.setText(sms.displayMessageBody)
                         var latitud = sms.displayMessageBody

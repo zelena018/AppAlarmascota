@@ -3,7 +3,12 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/delux/Projects/AndroidStudio/AppAlarmascota/app/src/main/res/layout/activity_gps.xml" value="0.48020833333333335" />
+        <entry key="..\:/Users/delux/Projects/AndroidStudio/AppAlarmascota/app/src/main/res/layout/activity_home_alarmascota.xml" value="0.22871376811594202" />
+        <entry key="..\:/Users/delux/Projects/AndroidStudio/AppAlarmascota/app/src/main/res/layout/activity_mapa_gps.xml" value="0.2" />
         <entry key="..\:/Users/delux/Projects/AndroidStudio/AppAlarmascota/app/src/main/res/layout/activity_mensaje_sms.xml" value="0.16530797101449277" />
+        <entry key="..\:/Users/delux/Projects/AndroidStudio/AppAlarmascota/app/src/main/res/layout/activity_ubicacion.xml" value="0.48020833333333335" />
+        <entry key="..\:/Users/delux/Projects/AndroidStudio/AppAlarmascota/app/src/main/res/layout/list_options.xml" value="0.4734375" />
         <entry key="..\:/Users/zelem/AndroidStudioProjects/AlarMascota/app/src/main/res/layout/activity_gps.xml" value="0.25" />
         <entry key="..\:/Users/zelem/AndroidStudioProjects/AlarMascota/app/src/main/res/layout/activity_home_alarmascota.xml" value="0.264" />
         <entry key="..\:/Users/zelem/AndroidStudioProjects/AlarMascota/app/src/main/res/layout/activity_iniciar_sesion.xml" value="0.176" />

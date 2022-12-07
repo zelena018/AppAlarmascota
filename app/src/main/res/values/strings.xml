@@ -33,6 +33,9 @@
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
     <string name="title_activity_mapa_gps">mapaGPS</string>
+    <string name="select">Selecciona</string>
+
+    <string name="setLocation">Ubicacion</string>
 
     //API KEY
     <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false"> AIzaSyARbN2IZD7rHFvngO3n6tnR7JeuIuRqdLc</string>

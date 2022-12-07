@@ -34,6 +34,21 @@
         app:srcCompat="@drawable/map" />
 
     <ImageView
+        android:id="@+id/imagen_mapa2"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_marginStart="64dp"
+        android:layout_marginTop="71dp"
+        android:layout_marginBottom="220dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/guideline2"
+        app:layout_constraintTop_toBottomOf="@+id/btn_micro"
+        app:layout_constraintVertical_bias="1.0"
+        app:srcCompat="@drawable/map" />
+
+    <ImageView
         android:id="@+id/imagen_micro"
         android:layout_width="70dp"
         android:layout_height="70dp"
@@ -104,4 +119,16 @@
         android:textColor="#000000"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imagen_sms" />
+
+    <Button
+        android:id="@+id/btn_ubicacion"
+        android:layout_width="130dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="36dp"
+        android:layout_marginTop="24dp"
+        android:backgroundTint="#FFFFFF"
+        android:text="@string/setLocation"
+        android:textColor="#000000"
+        app:layout_constraintStart_toStartOf="@+id/guideline2"
+        app:layout_constraintTop_toBottomOf="@+id/imagen_mapa2" />
 </androidx.constraintlayout.widget.ConstraintLayout>
