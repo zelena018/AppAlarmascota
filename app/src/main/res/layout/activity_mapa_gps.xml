@@ -92,7 +92,7 @@
         tools:text="Costo de Zona: " />
 
     <TextView
-        android:id="@+id/txtCosto"
+        android:id="@+id/txtDistancia"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="monospace"
@@ -111,7 +111,7 @@
 
 
     <Button
-        android:id="@+id/btn_reset"
+        android:id="@+id/btn_Locate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="120dp"

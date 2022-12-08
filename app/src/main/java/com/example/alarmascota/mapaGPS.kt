@@ -1,35 +1,51 @@
 package com.example.alarmascota
 
 import android.Manifest
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.location.Location
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.Telephony
+import android.telephony.SmsManager
 import android.util.Log
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.example.alarmascota.databinding.ActivityHomeAlarmascotaBinding
 
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
 import com.example.alarmascota.databinding.ActivityMapaGpsBinding
+import com.example.alarmascota.mensajeSMS.Companion.DogLatitude
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-import com.google.android.gms.maps.model.CircleOptions
-import com.google.android.gms.maps.model.PolylineOptions
+import com.google.android.gms.maps.model.*
 import com.google.android.gms.tasks.Task
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class mapaGPS : AppCompatActivity(), OnMapReadyCallback {
+
+    companion object{
+        var DogLatitud:Double = 0.0
+        var DogLongitud:Double = 0.0
+    }
+    private lateinit var binding : ActivityMapaGpsBinding
 
     private lateinit var mMap: GoogleMap
     private val DEFAULT_ZOOM = 15f
     private val CLOSE_ZOOM = 20f
-    val TAG:String = "main"
+    val TAG:String = "MAP "
 
     private val FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION
     private val COURSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION
@@ -41,9 +57,33 @@ class mapaGPS : AppCompatActivity(), OnMapReadyCallback {
     private var userLat:Double = 0.0
     private var userLong:Double = 0.0
 
+    var markers = arrayListOf<MarkerOptions>()
+
+    val currentPos = Location("")
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_gps)
+        binding = ActivityMapaGpsBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+
+
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.RECEIVE_SMS)!=PackageManager.PERMISSION_GRANTED)
+        {
+            ActivityCompat.requestPermissions(this,
+                arrayOf(Manifest.permission.RECEIVE_SMS, Manifest.permission.SEND_SMS),
+                111)
+        }
+        else
+            receiveMsg()
+
+        binding.btnLocate.setOnClickListener{
+            var sms = SmsManager.getDefault()
+            sms.sendTextMessage("8124349752","ME","@GPS", null, null)
+
+
+        }
 
         getLocationPermission()
     }
@@ -75,17 +115,61 @@ class mapaGPS : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
-    fun createMarker(lati:Double, longi:Double, name: String)
-    {
+    fun createMarker(lati:Double, longi:Double, name: String, type:Int) {
         //val coordinates = LatLng(25.7299374,-100.2096866)
         val coordinates = LatLng(lati,longi)
-        val marker = MarkerOptions().position(coordinates).title(name)
+        val marker:MarkerOptions
+        if(type == 1){
+            marker = MarkerOptions().position(coordinates).title(name).icon(BitmapDescriptorFactory.fromResource(R.drawable.home_icon))
+            markers.add(marker)
+        }else if(type == 2){
+            marker = MarkerOptions().position(coordinates).title(name).icon(BitmapDescriptorFactory.fromResource(R.drawable.dog_icon))
+            markers.add(marker)
+        }
 
 
-        val pointer = mMap.addMarker(marker)
-        pointer?.tag = 0
+
+        //val pointer = mMap.addMarker(marker)
+        //pointer?.tag = 0
 
     }
+
+    private fun updateMap(){
+
+        mMap.clear()
+        for (marker:MarkerOptions in markers){
+            mMap.addMarker(marker)
+        }
+
+        drawCircle(LatLng(Ubicacion.staticLatitud, Ubicacion.staticLongitude), Ubicacion.meters)
+    }
+
+    private fun updateMapDog(){
+
+        for(marker:MarkerOptions in markers){
+            if(marker.title.equals("Dog")){
+                mMap.addMarker(marker)
+            }
+        }
+
+        //drawCircle(LatLng(userLat, userLong), Ubicacion.meters)
+    }
+
+    private fun verifyMarker(){
+        for(marker:MarkerOptions in markers){
+            if(marker.title.equals("DOG")){
+                val indexMarker = markers.indexOf(marker)
+                markers.removeAt(indexMarker)
+            }
+        }
+    }
+
+
+
+        //val pointer = mMap.addMarker(marker)
+        //pointer?.tag = 0
+
+
 
     fun getDeviceLocation()
     {
@@ -94,48 +178,25 @@ class mapaGPS : AppCompatActivity(), OnMapReadyCallback {
 
         try{
             if(mLocationPermissionsGranted){
-                var location: Task<*> = mFusedLocationProviderClient.getLastLocation()
-                location.addOnCompleteListener { task ->
-                    if(task.isSuccessful){
-                        Log.d(TAG, "getUserLocation: Found Location")
-                        currentLocation = task.getResult() as Location
-                        val arr1 = floatArrayOf(.1f)
+                currentPos.latitude = Ubicacion.staticLatitud
+                currentPos.longitude = Ubicacion.staticLongitude
 
+                createMarker(currentPos.latitude, currentPos.longitude, "HOME",1)
 
-                        val home = Location("")
-                        home.latitude = 25.7299374
-                        home.longitude = -100.2096866
-
-                        userLat = currentLocation.latitude
-                        userLong = currentLocation.longitude
-
-
-                        var distanceInMeters = currentLocation.distanceTo(home)
-                        Log.d(TAG, "Distance in meters ->  ${distanceInMeters}")
-
-                        //addLine(currentLocation,home)
-
-                        //Location.distanceBetween(userLat, userLong, 25.7299374, -100.2096866, arr1)
-                        //Log.d(TAG, "Distance -> ${arr1[0]} ")
-
-
-
-
-                        moveCamera(LatLng(userLat, userLong), DEFAULT_ZOOM, "My location")
-                        drawCircle(LatLng(userLat, userLong))
-
-
-
-                    }else{
-                        Log.d(TAG, "onComplete: current location is null")
-                        Toast.makeText(this@mapaGPS, "Unable to get current location", Toast.LENGTH_SHORT).show()
-                    }
+                for (marker:MarkerOptions in markers){
+                    mMap.addMarker(marker)
                 }
+
+                moveCamera(LatLng(Ubicacion.staticLatitud, Ubicacion.staticLongitude), CLOSE_ZOOM, "My location")
+                drawCircle(LatLng(Ubicacion.staticLatitud, Ubicacion.staticLongitude), Ubicacion.meters )
+
 
             }
         }catch (e: SecurityException){
             Log.d(TAG, "getUserLocation: Security Exception ${e.message}")
         }
+
+
     }
 
     fun moveCamera(lati: LatLng, zoom:Float, title:String )
@@ -157,8 +218,7 @@ class mapaGPS : AppCompatActivity(), OnMapReadyCallback {
     }
 
 
-    private fun drawCircle(point: LatLng)
-    {
+    private fun drawCircle(point: LatLng, radio:Double) {
 
         // Instantiating CircleOptions to draw a circle around the marker
         val circleOptions = CircleOptions()
@@ -167,7 +227,7 @@ class mapaGPS : AppCompatActivity(), OnMapReadyCallback {
         circleOptions.center(point)
 
         // Radius of the circle
-        circleOptions.radius(25.0)
+        circleOptions.radius(radio)
 
         // Border color of the circle
         circleOptions.strokeColor(Color.BLACK)
@@ -205,6 +265,52 @@ class mapaGPS : AppCompatActivity(), OnMapReadyCallback {
             ActivityCompat.requestPermissions(this, permissions, LOCATION_PERMISSION_REQUEST_CODE)
         }
 
+    }
+
+    //------------------------------------------RECIBIMIENTO DE  OORDENADAS POR MENSAJE----------------------------------------------------
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode==111 && grantResults[0]==PackageManager.PERMISSION_GRANTED)
+            receiveMsg()
+    }
+
+    private fun receiveMsg()
+    {
+        var br = object : BroadcastReceiver()
+        {
+            override fun onReceive(p0: Context?, p1: Intent?)
+            {
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
+                {
+                    for(sms in Telephony.Sms.Intents.getMessagesFromIntent(p1))
+                    {
+
+                        Toast.makeText(this@mapaGPS, "Mensaje -> ${sms.displayMessageBody}", Toast.LENGTH_SHORT).show()
+                        var coordenadas = sms.displayMessageBody
+                        var both = coordenadas.split(',')
+                        mapaGPS.DogLatitud =  both.get(0).toDouble()
+                        mapaGPS.DogLongitud = both.get(1).toDouble()
+
+                        updateMap()
+                        verifyMarker()
+                        createMarker(mapaGPS.DogLatitud, mapaGPS.DogLongitud, "DOG", 2)
+                        updateMapDog()
+
+                        val coordinates = LatLng(mapaGPS.DogLatitud,mapaGPS.DogLongitud)
+                        moveCamera(coordinates,CLOSE_ZOOM,"Dog")
+                        //Toast.makeText(this@mapaGPS, "Latitud -> ${both.get(0)}", Toast.LENGTH_SHORT).show()
+                        //Toast.makeText(this@mapaGPS, "Longitud -> ${both.get(1)}", Toast.LENGTH_SHORT).show()
+
+                    }
+                }
+            }
+
+        }
+        registerReceiver(br, IntentFilter("android.provider.Telephony.SMS_RECEIVED"))
     }
 
 }

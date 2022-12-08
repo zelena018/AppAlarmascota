@@ -20,6 +20,11 @@ import com.example.alarmascota.databinding.ActivityHomeAlarmascotaBinding
 import com.example.alarmascota.databinding.ActivityMensajeSmsBinding
 
 class mensajeSMS : AppCompatActivity() {
+
+    companion object{
+        var DogLatitude:Double = 0.0
+        var DogLongitude:Double = 0.0
+    }
     private lateinit var binding : ActivityMensajeSmsBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -66,7 +71,14 @@ class mensajeSMS : AppCompatActivity() {
                     {
                         binding.numero.setText(sms.originatingAddress)
                         binding.mensaje.setText(sms.displayMessageBody)
-                        var latitud = sms.displayMessageBody
+                        Toast.makeText(this@mensajeSMS, "Mensaje -> ${sms.displayMessageBody}", Toast.LENGTH_SHORT).show()
+                        var coordenadas = sms.displayMessageBody
+                        var both = coordenadas.split(',')
+                        mensajeSMS.DogLatitude =  both.get(0).toDouble()
+                        mensajeSMS.DogLongitude = both.get(1).toDouble()
+                        Toast.makeText(this@mensajeSMS, "Latitud -> ${both.get(0)}", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@mensajeSMS, "Longitud -> ${both.get(1)}", Toast.LENGTH_SHORT).show()
+
                     }
                 }
             }

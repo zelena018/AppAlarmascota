@@ -28,6 +28,8 @@ class Ubicacion : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerCli
         var realLatitude:Double = 0.0
         var realLongitude:Double = 0.0
 
+        var meters:Double = 20.0
+
         var band:Boolean = false
         var globalBand:Boolean = false
     }
@@ -59,7 +61,7 @@ class Ubicacion : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerCli
 
 
     val items = arrayOf("25m","30m", "50m")
-    private var meters:Double = 20.0
+
 
     var markers = arrayListOf<MarkerOptions>()
     lateinit var autoCompleteText: AutoCompleteTextView
@@ -241,7 +243,7 @@ class Ubicacion : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerCli
             marker = MarkerOptions().position(coordinates).title(name).icon(BitmapDescriptorFactory.fromResource(R.drawable.home_icon))
             markers.add(marker)
         }else if(type == 2){
-            marker = MarkerOptions().position(coordinates).title(name)
+            marker = MarkerOptions().position(coordinates).title(name).icon(BitmapDescriptorFactory.fromResource(R.drawable.dog_icon))
             markers.add(marker)
         }
 
