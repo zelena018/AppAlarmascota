@@ -31,6 +31,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.358"
+        app:srcCompat="@drawable/dog_menu" />
+
+    <ImageView
+        android:id="@+id/imagen_mapa2"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_marginStart="64dp"
+        android:layout_marginTop="71dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.027"
+        app:layout_constraintStart_toStartOf="@+id/guideline2"
+        app:layout_constraintTop_toBottomOf="@+id/btn_micro"
         app:srcCompat="@drawable/map" />
 
     <ImageView
@@ -53,7 +65,7 @@
         android:layout_marginStart="40dp"
         android:layout_marginTop="20dp"
         android:backgroundTint="#FFFFFF"
-        android:text="@string/btn_mapa"
+        android:text="Localizar"
         android:textColor="#000000"
         app:layout_constraintEnd_toStartOf="@+id/guideline2"
         app:layout_constraintHorizontal_bias="0.0"
@@ -104,4 +116,16 @@
         android:textColor="#000000"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imagen_sms" />
+
+    <Button
+        android:id="@+id/btn_ubicacion"
+        android:layout_width="130dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="36dp"
+        android:layout_marginTop="24dp"
+        android:backgroundTint="#FFFFFF"
+        android:text="@string/setLocation"
+        android:textColor="#000000"
+        app:layout_constraintStart_toStartOf="@+id/guideline2"
+        app:layout_constraintTop_toBottomOf="@+id/imagen_mapa2" />
 </androidx.constraintlayout.widget.ConstraintLayout>

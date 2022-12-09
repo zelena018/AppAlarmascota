@@ -3,8 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.alarmascota">
 
-    <uses-permission android:name="android.permission.RECEIVE_SMS"></uses-permission>
-    <uses-permission android:name="android.permission.SEND_SMS"></uses-permission>
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
@@ -16,6 +20,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AlarMascota"
         tools:targetApi="31">
+        <activity
+            android:name=".Ubicacion"
+            android:exported="false" />
         <activity
             android:name=".mensajeSMS"
             android:exported="false" />
@@ -32,7 +39,7 @@
         -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyCrF_bz03UWNxIH8vwTGGZx6d1OiV3rtkE" />
+            android:value="@string/google_maps_key" />
 
         <activity
             android:name=".mapaGPS"
@@ -43,7 +50,13 @@
             android:exported="false" />
         <activity
             android:name=".home_alarmascota"
-            android:exported="false" />
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".registro"
             android:exported="false" />
@@ -53,11 +66,6 @@
         <activity
             android:name=".MainActivity"
             android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
 
         <receiver

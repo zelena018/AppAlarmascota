@@ -20,6 +20,11 @@ import com.example.alarmascota.databinding.ActivityHomeAlarmascotaBinding
 import com.example.alarmascota.databinding.ActivityMensajeSmsBinding
 
 class mensajeSMS : AppCompatActivity() {
+
+    companion object{
+        var DogLatitude:Double = 0.0
+        var DogLongitude:Double = 0.0
+    }
     private lateinit var binding : ActivityMensajeSmsBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,7 +45,7 @@ class mensajeSMS : AppCompatActivity() {
 
         binding.btnEnviarSms.setOnClickListener{
             var sms = SmsManager.getDefault()
-            sms.sendTextMessage(binding.numero.text.toString(),"ME","@GPS", null, null)
+            sms.sendTextMessage(binding.numero.text.toString(),"ME",binding.mensaje.text.toString(), null, null)
         }
     }
 
@@ -54,14 +59,26 @@ class mensajeSMS : AppCompatActivity() {
             receiveMsg()
     }
 
-    private fun receiveMsg() {
-        var br = object : BroadcastReceiver(){
-            override fun onReceive(p0: Context?, p1: Intent?) {
-                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                    for(sms in Telephony.Sms.Intents.getMessagesFromIntent(p1)){
+    private fun receiveMsg()
+    {
+        var br = object : BroadcastReceiver()
+        {
+            override fun onReceive(p0: Context?, p1: Intent?)
+            {
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
+                {
+                    for(sms in Telephony.Sms.Intents.getMessagesFromIntent(p1))
+                    {
                         binding.numero.setText(sms.originatingAddress)
                         binding.mensaje.setText(sms.displayMessageBody)
-                        var latitud = sms.displayMessageBody
+                        Toast.makeText(this@mensajeSMS, "Mensaje -> ${sms.displayMessageBody}", Toast.LENGTH_SHORT).show()
+                        var coordenadas = sms.displayMessageBody
+                        var both = coordenadas.split(',')
+                        mensajeSMS.DogLatitude =  both.get(0).toDouble()
+                        mensajeSMS.DogLongitude = both.get(1).toDouble()
+                        Toast.makeText(this@mensajeSMS, "Latitud -> ${both.get(0)}", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@mensajeSMS, "Longitud -> ${both.get(1)}", Toast.LENGTH_SHORT).show()
+
                     }
                 }
             }
