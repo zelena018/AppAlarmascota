@@ -40,7 +40,7 @@
         android:layout_marginTop="20dp"
         android:fontFamily="monospace"
         android:textAlignment="center"
-        android:textColor="@android:color/holo_green_dark"
+        android:textColor="#FFDB83"
         app:layout_constraintEnd_toEndOf="@+id/tvName"
         app:layout_constraintHorizontal_bias="0.505"
         app:layout_constraintStart_toStartOf="@+id/tvName"
@@ -52,12 +52,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="52dp"
+        android:layout_marginTop="40dp"
         android:fontFamily="monospace"
         android:text="STATUS: "
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvName"
+        app:layout_constraintTop_toBottomOf="@id/txtAddress"
         tools:text="Costo de Zona: " />
 
     <TextView
@@ -85,7 +85,7 @@
         android:layout_marginStart="24dp"
         android:layout_marginTop="24dp"
         android:fontFamily="monospace"
-        android:text="Distancia: "
+        android:text="Distancia:"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvStatus"

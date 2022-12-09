@@ -31,7 +31,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.358"
-        app:srcCompat="@drawable/map" />
+        app:srcCompat="@drawable/dog_menu" />
 
     <ImageView
         android:id="@+id/imagen_mapa2"
@@ -39,13 +39,10 @@
         android:layout_height="70dp"
         android:layout_marginStart="64dp"
         android:layout_marginTop="71dp"
-        android:layout_marginBottom="220dp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.027"
         app:layout_constraintStart_toStartOf="@+id/guideline2"
         app:layout_constraintTop_toBottomOf="@+id/btn_micro"
-        app:layout_constraintVertical_bias="1.0"
         app:srcCompat="@drawable/map" />
 
     <ImageView
@@ -68,7 +65,7 @@
         android:layout_marginStart="40dp"
         android:layout_marginTop="20dp"
         android:backgroundTint="#FFFFFF"
-        android:text="@string/btn_mapa"
+        android:text="Localizar"
         android:textColor="#000000"
         app:layout_constraintEnd_toStartOf="@+id/guideline2"
         app:layout_constraintHorizontal_bias="0.0"

@@ -17,6 +17,9 @@ import android.util.Log
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.android.volley.Request
+import com.android.volley.toolbox.JsonObjectRequest
+import com.android.volley.toolbox.Volley
 import com.example.alarmascota.databinding.ActivityHomeAlarmascotaBinding
 
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -33,6 +36,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.json.JSONException
 
 class mapaGPS : AppCompatActivity(), OnMapReadyCallback {
 
@@ -40,6 +44,7 @@ class mapaGPS : AppCompatActivity(), OnMapReadyCallback {
         var DogLatitud:Double = 0.0
         var DogLongitud:Double = 0.0
     }
+    var Dog = Location("")
     private lateinit var binding : ActivityMapaGpsBinding
 
     private lateinit var mMap: GoogleMap
@@ -147,7 +152,7 @@ class mapaGPS : AppCompatActivity(), OnMapReadyCallback {
     private fun updateMapDog(){
 
         for(marker:MarkerOptions in markers){
-            if(marker.title.equals("Dog")){
+            if(marker.title.equals("DOG")){
                 mMap.addMarker(marker)
             }
         }
@@ -295,13 +300,34 @@ class mapaGPS : AppCompatActivity(), OnMapReadyCallback {
                         mapaGPS.DogLatitud =  both.get(0).toDouble()
                         mapaGPS.DogLongitud = both.get(1).toDouble()
 
-                        updateMap()
                         verifyMarker()
+                        updateMap()
                         createMarker(mapaGPS.DogLatitud, mapaGPS.DogLongitud, "DOG", 2)
                         updateMapDog()
 
+
+                        Dog.latitude = mapaGPS.DogLatitud
+                        Dog.longitude = mapaGPS.DogLongitud
+
+                        var distanceInMeters = currentPos.distanceTo(Dog)
+                        Log.d(TAG, "Distance in meters ->  ${distanceInMeters}")
+                        binding.Distancia.setText(getString(R.string.txtDistancia, distanceInMeters.toString()))
+                        addLine(currentPos,Dog)
+
+
+
+                        if(distanceInMeters <= Ubicacion.meters){
+                            binding.tvStatus.setText(getString(R.string.txtStatus, "Dentro del rango"))
+                            binding.tvStatus.setTextColor(Color.GREEN)
+
+                        }else{
+                            binding.tvStatus.setText(getString(R.string.txtStatus, "fUERA del rango"))
+                            binding.tvStatus.setTextColor(Color.RED)
+                        }
+                        getAddressName()
+
                         val coordinates = LatLng(mapaGPS.DogLatitud,mapaGPS.DogLongitud)
-                        moveCamera(coordinates,CLOSE_ZOOM,"Dog")
+                        moveCamera(coordinates,19f  ,"Dog")
                         //Toast.makeText(this@mapaGPS, "Latitud -> ${both.get(0)}", Toast.LENGTH_SHORT).show()
                         //Toast.makeText(this@mapaGPS, "Longitud -> ${both.get(1)}", Toast.LENGTH_SHORT).show()
 
@@ -311,6 +337,112 @@ class mapaGPS : AppCompatActivity(), OnMapReadyCallback {
 
         }
         registerReceiver(br, IntentFilter("android.provider.Telephony.SMS_RECEIVED"))
+    }
+
+
+    private fun getAddressName(){
+        var queue = Volley.newRequestQueue(this)
+        var lati:Double
+        var longi:Double
+        var precios:Double = 0.0
+        var cont:Int = 0
+        var promedio:Double = 0.0
+        var distance:Double = 99999.0
+        var distanceInMeters:Float
+
+        var address:String = ""
+        var actualName:String = ""
+
+        lateinit var actualLocation: Location
+
+
+
+        Log.d(TAG, "UserLat -> ${Dog.latitude} ")
+        Log.d(TAG, "UserLat -> ${Dog.longitude} ")
+        var url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?fields=price_level&location=${Dog.latitude}%2C${Dog.longitude}&radius=400&type=any&key=AIzaSyDV6aFItX960hrbAaI229-8iDa3xTZ-RXU"
+        //Log.d(TAG, "https://maps.googleapis.com/maps/api/place/nearbysearch/json?fields=price_level&location=${userLat}%2C${userLong}&radius=2500&type=restaurant&key=AIzaSyDV6aFItX960hrbAaI229-8iDa3xTZ-RXU")
+        var myJsonObjectRequest = JsonObjectRequest(
+            Request.Method.GET,url,null,
+            {
+                    response ->  try{
+                var myJsonArray = response.getJSONArray("results")
+                for(i in 0 until myJsonArray.length()){
+                    var myJSONObject = myJsonArray.getJSONObject(i)
+                    /*
+                    val registro = LayoutInflater.from(this).inflate(R.layout.table_row_np,null,false)
+                    val colName = registro.findViewById<View>(R.id.columnaNombre) as TextView
+                    val colPrice = registro.findViewById<View>(R.id.columnaEmail) as TextView
+                    val colLatitude = registro.findViewById<View>(R.id.colEditar)
+                    val colBorrar = registro.findViewById<View>(R.id.colBorrar)
+                    */
+
+
+                    var name = myJSONObject.getString("name")
+                    Log.d(TAG, "Nombre:  ${name}" )
+
+
+
+                    //colPrice.text=myJSONObject.getString("price_level")
+
+
+                    var geometry = myJSONObject.getJSONObject("geometry")
+                    var location = geometry.getJSONObject("location")
+
+                    lati = location.getString("lat").toDouble()
+                    longi = location.getString("lng").toDouble()
+                    Log.d(TAG, "Latitude: ${location.getString("lat")}")
+                    Log.d(TAG, "Latitude: ${location.getString("lng")}")
+
+
+
+                    //createMarker(lati, longi, name)
+
+                    val loc2 = Location("")
+                    loc2.latitude = lati
+                    loc2.longitude = longi
+
+                    distanceInMeters = Dog.distanceTo(loc2)
+                    if(distanceInMeters < distance ){
+                        distance = distanceInMeters.toDouble()
+                        actualName = name
+                        address = myJSONObject.getString("vicinity")
+
+                        actualLocation = loc2
+
+                    }
+
+                    //addLine(currentLocation, loc2)
+
+
+
+
+
+                    //colEditar.id=myJSONObject.getString("id").toInt()
+                    //colBorrar.id=myJSONObject.getString("id").toInt()
+
+
+
+                }
+
+                //addLine(currentLocation, actualLocation)
+                //createMarker(actualLocation.latitude, actualLocation.longitude, "Closest one")
+
+                Log.d(TAG, "cargaTabla: ENOR DISTANCIA -> $distance")
+                Log.d(TAG, "cargaTabla: PLACE NAME -> $actualName")
+                Log.d(TAG, "cargaTabla: Address -> $address")
+
+                binding.txtAddress.setText(address)
+
+            }catch (e: JSONException){
+                //e.printStackTrace()
+                Log.d(TAG, "getAddressName: ${e.message}")
+            }
+            }, {
+                    error ->
+                Log.d(TAG, "Error: ${error}")
+
+            })
+        queue.add(myJsonObjectRequest)
     }
 
 }

@@ -56,7 +56,7 @@ class home_alarmascota : AppCompatActivity() {
 
 
 
-                Toast.makeText(this, coordenadas, Toast.LENGTH_SHORT).show()
+                //Toast.makeText(this, coordenadas, Toast.LENGTH_SHORT).show()
 
 
                 val intent: Intent = Intent(this, mapaGPS::class.java)
@@ -65,6 +65,13 @@ class home_alarmascota : AppCompatActivity() {
                 Toast.makeText(this, "PRIMERO DEBE GUARDAR UNA UBICACION", Toast.LENGTH_LONG).show()
             }
 
+        }
+
+        binding.btnMicro.setOnClickListener {
+            var sms = SmsManager.getDefault()
+            sms.sendTextMessage("8124349752","ME","@CALL", null, null)
+
+            Toast.makeText(this, "ESTABLECIENDO COMUNICACION CON GPS", Toast.LENGTH_SHORT).show()
         }
 
         //Para ir de la pantalla HOME al envio de SMS
@@ -100,4 +107,6 @@ class home_alarmascota : AppCompatActivity() {
         }
         registerReceiver(br, IntentFilter("android.provider.Telephony.SMS_RECEIVED"))
     }
+
+
 }
